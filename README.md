@@ -11,32 +11,21 @@
 2. Crear carpeta donde se va a trabajar
    - Crear carpeta raiz
    - Dentro de la carpeta crear entorno de virtual:
-     cmd -> "python -m venv [nombre]\_env"
+     cmd -> "python -m venv [nombre]env"
 3. Activar el entorno virtual creado:
-   cmd -> "cd .\nenv\Scripts\"
+   cmd -> "cd .\[nombre]env\Scripts\"
    cmd -> ".\activate"
 
    - Si tienes el error: "cannot be loaded because running scripts is disabled on this system"
      powershell(admin) -> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
      powershell(admin) -> Tipear "A" (acepta todo)
-     Se activa el entorno virtual y verás que el path del cmd cambia en el inicio "([nombre]\_env)"
+     Se activa el entorno virtual y verás que el path del cmd cambia en el inicio "([nombre]env)"
 
 4. [opcional] Desactivar el entorno virtual:
-   cmd -> "cd .\nenv\Scripts\"
+   cmd -> "cd .\[nombre]env\Scripts\"
    cmd -> "deactivate"
 
-## 2. fastAPI - Ejecutar
-
-1. En la barra lateral de vscode:
-
-   - Click a "run & debug"
-   - Ejecutar "Python: Current File"
-
-2. Ingresar al navegador mediante:
-   - http://127.0.0.1:8000/
-   - http://127.0.0.1:8000/docs
-
-## 3. Git
+## 2. Git
 
 1. Para guardar las librerias / dependencias utilizadas en el proyecto:
 
@@ -44,6 +33,19 @@
 
 2. Para instalar las dependencias de un proyecto;
    - pip install -r requirements.txt
+
+## 3. fastAPI - Ejecutar
+
+1. Posicionate en el archivo main.py
+
+2. En la barra lateral de vscode:
+
+   - Click a "run & debug"
+   - Ejecutar "Python: Current File"
+
+3. Ingresar al navegador mediante:
+   - http://127.0.0.1:8000/
+   - http://127.0.0.1:8000/docs
 
 ## Anexos
 
@@ -57,10 +59,10 @@
 
 [2]
 
-- Debugging (fastAPI)
-  https://fastapi.tiangolo.com/tutorial/debugging/
+- pip freeze
+  https://pip.pypa.io/en/stable/cli/pip_freeze/
 
 [3]
 
-- pip freeze
-  https://pip.pypa.io/en/stable/cli/pip_freeze/
+- Debugging (fastAPI)
+  https://fastapi.tiangolo.com/tutorial/debugging/
