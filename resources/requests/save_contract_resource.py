@@ -1,0 +1,14 @@
+from pydantic import BaseModel
+
+from models.contract import Contract
+
+class SaveContractResource(BaseModel):
+    name: str
+    bank_id: int
+
+    def to_model(self, profile_id: int) -> Contract:
+        return Contract(
+            name=self.name,
+            profile_id=profile_id,
+            bank_id=self.bank_id,
+        )

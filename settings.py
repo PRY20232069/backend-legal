@@ -1,0 +1,19 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
+OPENAI_MODEL_ID=os.getenv("OPENAI_MODEL_ID")
+OPENAI_SYSTEM_CONTENT=os.getenv("OPENAI_SYSTEM_CONTENT")
+
+DB_HOST=os.getenv("DB_HOST")
+DB_NAME=os.getenv("DB_NAME")
+DB_USERNAME=os.getenv("DB_USERNAME")
+DB_PASSWORD=os.getenv("DB_PASSWORD")
+
+DB_CONNECTION_URI=os.getenv("DB_CONNECTION_URI")
+
+SECRET_KEY=os.getenv("SECRET_KEY")
+ALGORITHM=os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
