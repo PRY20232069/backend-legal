@@ -3,6 +3,7 @@ from sqlalchemy import select, update, delete
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from models.bank import Bank
+from sqlalchemy.exc import OperationalError
 
 class BankRepository:
 
@@ -23,6 +24,10 @@ class BankRepository:
             return result
         except NoResultFound:
             return []
+        except OperationalError:
+            self.session.rollback()
+            result: Sequence[Bank] = self.session.execute(statement).scalars().all()
+            return result
     
     def find_by_name(self, name: str) -> Bank | None:
         statement = select(Bank).where(Bank.name == name)
@@ -32,6 +37,10 @@ class BankRepository:
             return result
         except NoResultFound:
             return None
+        except OperationalError:
+            self.session.rollback()
+            result: Bank = self.session.execute(statement).scalar_one()
+            return result
         
     def find_by_id(self, id: int) -> Bank | None:
         statement = select(Bank).where(Bank.id == id)
@@ -41,3 +50,7 @@ class BankRepository:
             return result
         except NoResultFound:
             return None
+        except OperationalError:
+            self.session.rollback()
+            result: Bank = self.session.execute(statement).scalar_one()
+            return result

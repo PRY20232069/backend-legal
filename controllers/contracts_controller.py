@@ -45,12 +45,12 @@ def get_all_contracts_by_name(name: str, token: str = Depends(bearer_scheme)) ->
     return contractsResource
 
 @router.get("/admin")
-def get_all_contracts_by_admin() -> Sequence[ContractResource]:
+def get_all_contracts_only_admin() -> Sequence[ContractResource]:
     contractsResource = contractService.getAllContractsByAdmin()
     return contractsResource
 
 @router.get("/{contract_id}")
-def get_contract(contract_id: int, token: str = Depends(bearer_scheme)) -> ContractResource:
+def get_contract_by_id(contract_id: int, token: str = Depends(bearer_scheme)) -> ContractResource:
     user_id = JwtUtils.getUserId(token=token)
     contractResource = contractService.getContractByContractId(contract_id=contract_id, user_id=user_id)
     return contractResource

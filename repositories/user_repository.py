@@ -3,6 +3,7 @@ from sqlalchemy import select, update, delete
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from models.user import User
+from sqlalchemy.exc import OperationalError
 
 class UserRepository:
 
@@ -23,6 +24,10 @@ class UserRepository:
             return result
         except NoResultFound:
             return []
+        except OperationalError:
+            self.session.rollback()
+            result: Sequence[User] = self.session.execute(statement).scalars().all()
+            return result
         
     def find_by_id(self, id: int) -> User | None:
         statement = select(User).where(User.id == id)
@@ -32,6 +37,10 @@ class UserRepository:
             return result
         except NoResultFound:
             return None
+        except OperationalError:
+            self.session.rollback()
+            result: User = self.session.execute(statement).scalar_one()
+            return result
         
     def find_by_email(self, email: str) -> User | None:
         statement = select(User).where(User.email == email)
@@ -41,3 +50,7 @@ class UserRepository:
             return result
         except NoResultFound:
             return None
+        except OperationalError:
+            self.session.rollback()
+            result: User = self.session.execute(statement).scalar_one()
+            return result

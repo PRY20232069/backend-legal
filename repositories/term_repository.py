@@ -3,6 +3,7 @@ from sqlalchemy import select, update, delete
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from models.term import Term
+from sqlalchemy.exc import OperationalError
 
 class TermRepository:
 
@@ -28,6 +29,10 @@ class TermRepository:
             return result
         except NoResultFound:
             return []
+        except OperationalError:
+            self.session.rollback()
+            result: Sequence[Term] = self.session.execute(statement).scalars().all()
+            return result
         
     def find_all_by_contract_id(self, contract_id: int) -> Sequence[Term]:
         statement = select(Term).filter_by(contract_id=contract_id)
@@ -37,6 +42,10 @@ class TermRepository:
             return result
         except NoResultFound:
             return []
+        except OperationalError:
+            self.session.rollback()
+            result: Sequence[Term] = self.session.execute(statement).scalars().all()
+            return result
         
     def find_by_term_id_and_contract_id(self, term_id: int, contract_id: int) -> Term | None:
         statement = select(Term).filter_by(id=term_id, contract_id=contract_id)
@@ -46,3 +55,7 @@ class TermRepository:
             return result
         except NoResultFound:
             return None
+        except OperationalError:
+            self.session.rollback()
+            result: Term = self.session.execute(statement).scalar_one()
+            return result

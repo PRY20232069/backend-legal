@@ -11,8 +11,6 @@ from models.bank import Bank
 from models.contract import Contract
 from models.term import Term
 
-print(DB_CONNECTION_URI)
-
 logging.basicConfig()
 logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 

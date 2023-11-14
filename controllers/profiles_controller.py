@@ -28,7 +28,7 @@ def create_profile(saveProfileResource: SaveProfileResource, token: str = Depend
     return profileResource
 
 @router.get("/admin")
-def get_all_profiles_by_admin() -> Sequence[ProfileResource]:
+def get_all_profiles_only_admin() -> Sequence[ProfileResource]:
     profileResources = profileService.getAllProfilesByAdmin()
     return profileResources
 

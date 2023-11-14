@@ -26,7 +26,7 @@ def register_bank(saveBankResource: SaveBankResource) -> BankResource:
     bank_resource = bankService.createBank(saveBankResource=saveBankResource)
     return bank_resource
 
-@router.get("/all")
+@router.get("/")
 def get_all_banks() -> Sequence[BankResource]:
     bankResources = bankService.getAllBanks()
     return bankResources

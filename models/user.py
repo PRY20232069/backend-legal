@@ -16,4 +16,5 @@ class User(Base):
         return UserResource(
             id=self.id,
             email=self.email,
+            token=''
         )

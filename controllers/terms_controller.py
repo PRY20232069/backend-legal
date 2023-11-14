@@ -45,6 +45,6 @@ def get_all_terms_by_contract_id(contract_id: int, token: str = Depends(bearer_s
     return termsResource
 
 @router.get("/terms/admin")
-def get_all_terms_by_admin() -> Sequence[TermResource]:
+def get_all_terms_only_admin() -> Sequence[TermResource]:
     termsResource = termService.getAllTermsByAdmin()
     return termsResource

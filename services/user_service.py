@@ -24,9 +24,14 @@ class UserService:
 
         saveUserResource.password = self.password_hasher.hash(saveUserResource.password)
         user = self.userRepository.create(saveUserResource.to_model())
-        return user.to_resource()
+
+        token = self.__generateToken__(id=user.id)
+
+        userResource = user.to_resource()
+        userResource.token = token
+        return userResource
     
-    def loginUser(self, saveUserResource: SaveUserResource) -> AuthenticationResponse:
+    def loginUser(self, saveUserResource: SaveUserResource) -> UserResource:
         existingUser = self.userRepository.find_by_email(email=saveUserResource.email)
         if not existingUser:
             raise HTTPException(
@@ -40,11 +45,13 @@ class UserService:
                 detail="Invalid credentials"
             )
         
-        expiration = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        payload = {"id": existingUser.id, "exp": expiration}
-        token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+        token = self.__generateToken__(id=existingUser.id)
 
-        return AuthenticationResponse(token=token)
+        return UserResource(
+            id=existingUser.id,
+            email=existingUser.email,
+            token=token
+        )
     
     def getAllUsersByAdmin(self) -> Sequence[UserResource]:
         users = self.userRepository.find_all()
@@ -58,3 +65,10 @@ class UserService:
                 detail="User not found"
             )
         return user.to_resource()
+    
+
+    def __generateToken__(self, id: int) -> str:
+        expiration = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        payload = {"id": id, "exp": expiration}
+        token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+        return token

@@ -29,12 +29,12 @@ def register_user(saveUserResource: SaveUserResource) -> UserResource:
     return userResource
 
 @router.post("/login")
-def login_user(saveUserResource: SaveUserResource) -> AuthenticationResponse:
-    authResponse = userService.loginUser(saveUserResource=saveUserResource)
-    return authResponse
+def login_user(saveUserResource: SaveUserResource) -> UserResource:
+    userResource = userService.loginUser(saveUserResource=saveUserResource)
+    return userResource
 
 @router.get("/admin")
-def get_all_users_by_admin() -> Sequence[UserResource]:
+def get_all_users_only_admin() -> Sequence[UserResource]:
     userResources = userService.getAllUsersByAdmin()
     return userResources
 

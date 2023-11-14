@@ -3,6 +3,7 @@ from sqlalchemy import select, update, delete
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from models.profile import Profile
+from sqlalchemy.exc import OperationalError
 
 class ProfileRepository:
 
@@ -23,6 +24,10 @@ class ProfileRepository:
             return result
         except NoResultFound:
             return []
+        except OperationalError:
+            self.session.rollback()
+            result: Sequence[Profile] = self.session.execute(statement).scalars().all()
+            return result
     
     def find_by_user_id(self, user_id: int) -> Profile | None:
         statement = select(Profile).filter(Profile.user_id == user_id)
@@ -32,3 +37,7 @@ class ProfileRepository:
             return result
         except NoResultFound:
             return None
+        except OperationalError:
+            self.session.rollback()
+            result: Profile = self.session.execute(statement).scalar_one()
+            return result
