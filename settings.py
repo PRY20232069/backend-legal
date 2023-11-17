@@ -1,3 +1,4 @@
+from firebase_admin import credentials, initialize_app
 from dotenv import load_dotenv
 import os
 
@@ -6,6 +7,7 @@ load_dotenv()
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL_ID=os.getenv("OPENAI_MODEL_ID")
 OPENAI_SYSTEM_CONTENT=os.getenv("OPENAI_SYSTEM_CONTENT")
+OPENAI_SYSTEM_CONTENT_TERMS_INDETIFYIER=os.getenv("OPENAI_SYSTEM_CONTENT_TERMS_INDETIFYIER")
 
 DB_HOST=os.getenv("DB_HOST")
 DB_NAME=os.getenv("DB_NAME")
@@ -19,3 +21,10 @@ ALGORITHM=os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 ORIGIN_ALLOWED=os.getenv("ORIGIN_ALLOWED")
+
+FIREBASE_CERTIFICATE_FILE=os.getenv("FIREBASE_CERTIFICATE_FILE")
+FIREBASE_STORAGE_ACCESS_URL=os.getenv("FIREBASE_STORAGE_ACCESS_URL")
+
+
+cred = credentials.Certificate(FIREBASE_CERTIFICATE_FILE)
+initialize_app(cred, {'storageBucket': FIREBASE_STORAGE_ACCESS_URL})

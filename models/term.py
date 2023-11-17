@@ -1,6 +1,6 @@
 from models.base.base_entity import Base
 from sqlalchemy.orm import Mapped
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Text
 from resources.responses.term_resource import TermResource
 from utils.constants import MAX_CHARS_MULTI_LINE
 
@@ -8,9 +8,9 @@ class Term(Base):
     __tablename__ = 'terms'
 
     id: Mapped[int] | int = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    description: Mapped[str] | str = Column(String(MAX_CHARS_MULTI_LINE), nullable=False)
-    interpretation: Mapped[str] | str | None = Column(String(MAX_CHARS_MULTI_LINE))
-    consumer_protection_law: Mapped[str] | str | None = Column(String(MAX_CHARS_MULTI_LINE))
+    description: Mapped[str] | str = Column(Text, nullable=False)
+    interpretation: Mapped[str] | str | None = Column(Text, nullable=True)
+    consumer_protection_law: Mapped[str] | str | None = Column(Text, nullable=True)
     index: Mapped[int] | int = Column(Integer, nullable=False)
     num_page: Mapped[int] | int = Column(Integer, nullable=False)
     contract_id: Mapped[int] | int = Column(Integer, ForeignKey('contracts.id'), nullable=False)

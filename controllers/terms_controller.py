@@ -6,6 +6,7 @@ from repositories.configuration.database import SessionLocal
 from repositories.contract_repository import ContractRepository
 from repositories.profile_repository import ProfileRepository
 from repositories.term_repository import TermRepository
+from resources.requests.get_terms_request import GetTermsRequest
 from resources.requests.save_term_resource import SaveTermResource
 from resources.responses.term_resource import TermResource
 from services.terms_service import TermService
@@ -43,6 +44,11 @@ def get_all_terms_by_contract_id(contract_id: int, token: str = Depends(bearer_s
     user_id = JwtUtils.getUserId(token=token)
     termsResource = termService.getAllTermsByContractId(contract_id, user_id)
     return termsResource
+
+# @router.post("/terms/text")
+# def identify_all_terms_by_text(getTermsRequest: GetTermsRequest) -> Sequence[TermResource]:
+#     termsResource = termService.identifyAllTermsByText(getTermsRequest.text)
+#     return termsResource
 
 @router.get("/terms/admin")
 def get_all_terms_only_admin() -> Sequence[TermResource]:

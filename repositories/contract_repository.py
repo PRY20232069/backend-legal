@@ -16,6 +16,11 @@ class ContractRepository:
         self.session.refresh(contract)
         return contract
     
+    def update(self, contract: Contract) -> Contract:
+        self.session.commit()
+        self.session.refresh(contract)
+        return contract
+    
     def find_all(self) -> Sequence[Contract]:
         statement = select(Contract)
 

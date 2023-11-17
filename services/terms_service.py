@@ -4,9 +4,9 @@ from models.term import Term
 from repositories.contract_repository import ContractRepository
 from repositories.profile_repository import ProfileRepository
 from repositories.term_repository import TermRepository
-from resources.requests.save_user_resource import SaveUserResource
+from resources.requests.save_term_resource import SaveTermResource
 from resources.responses.term_resource import TermResource
-from settings import OPENAI_API_KEY, OPENAI_MODEL_ID, OPENAI_SYSTEM_CONTENT
+from settings import OPENAI_API_KEY, OPENAI_MODEL_ID, OPENAI_SYSTEM_CONTENT, OPENAI_SYSTEM_CONTENT_TERMS_INDETIFYIER
 import openai
 
 class TermService:
@@ -17,8 +17,9 @@ class TermService:
 
         openai.api_key = OPENAI_API_KEY
         self.openAIClient = openai
+        self.openAIClient.api_timeout = 360 # 6 minutos
 
-    def registerTerm(self, saveTermResource: SaveUserResource, contract_id, user_id) -> TermResource | Exception:
+    def registerTerm(self, saveTermResource: SaveTermResource, contract_id, user_id) -> TermResource | Exception:
         existingProfile = self.profileRepository.find_by_user_id(user_id=user_id)
         if not existingProfile:
             raise HTTPException(
@@ -80,6 +81,12 @@ class TermService:
         
         terms = self.termRepository.find_all_by_contract_id(contract_id=contract_id)
         return [term.to_resource() for term in terms]
+    
+    def identifyAllTermsByText(self, text: str) -> Sequence[TermResource] | Exception:
+        terms = self.__identify_terms_in_text__(text) # Esta funcion retorna un texto con varios parrafos separados por ???. Ahora debemos obtener por cada parrafo un TermResource
+        terms = terms.split('???')
+        termResources = [TermResource(description=term, index=index) for index, term in enumerate(terms)]
+        return termResources
 
     def getAllTermsByAdmin(self) -> Sequence[TermResource]:
         terms = self.termRepository.find_all()
@@ -96,35 +103,14 @@ class TermService:
             ]
         )
         return response.choices[0].message.content
-
-
-#     def generate_term_explanation_command(self, prompt: str):
-#         # term_id = command.term_id
-        
-#         response = self.openAIClient.chat.completions.create(
-#         model=self.openAISettings.model_id,
-#         messages=[
-#             {"role": "system", "content": "Eres un experto legal que explica por qué una cláusula puede ser o no potencialmente perjudicial para el consumidor"},
-#             {"role": "user", "content": "Si en las fechas de pago de las Cuotas, la Cuenta de Pagos no tiene dinero (fondos) suficiente, el Banco podrá cobrar las Cuotas, así como, cualquier otro concepto establecido en la Hoja Resumen y/o en el Cronograma, de cualquier otra cuenta que Usted tenga en el Banco, sea en moneda nacional o en moneda extranjera.###"}
-#         ]
-#         )
-#         print(response.choices[0].message.content)
-
-#         explanationGeneratedEvent = TermExplanationGeneratedEvent(term_id=term_id, explanation=response.choices[0].message.content)
-
-#         message = f'''
-# **********************************************
-#     TERM EXPLANATION GENERATED!!
-#     term_id: {term_id}
-#     explanation: {response.choices[0].message.content}
-# **********************************************
-#         '''
-
-#         print(message)
-
-#         return response.choices[0].message.content
     
-    # def get_all_terms_by_contract_id_query(self, query: GetAllTermsByContractIdQuery):
-    #     contract_id: int = query.contract_id
-    #     terms: List[Term] = terms_examples
-    #     return terms
+    
+    def __identify_terms_in_text__(self, text: str) -> str:
+        response = self.openAIClient.chat.completions.create(
+            model='gpt-4-1106-preview',
+            messages=[
+                {"role": "system", "content": OPENAI_SYSTEM_CONTENT_TERMS_INDETIFYIER},
+                {"role": "user", "content": text}
+            ]
+        )
+        return response.choices[0].message.content
