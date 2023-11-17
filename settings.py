@@ -28,3 +28,6 @@ FIREBASE_STORAGE_ACCESS_URL=os.getenv("FIREBASE_STORAGE_ACCESS_URL")
 
 cred = credentials.Certificate(FIREBASE_CERTIFICATE_FILE)
 initialize_app(cred, {'storageBucket': FIREBASE_STORAGE_ACCESS_URL})
+
+
+# TODO: PARA TP2 AGREGAR TESTING

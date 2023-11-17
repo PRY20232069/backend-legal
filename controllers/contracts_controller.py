@@ -36,6 +36,12 @@ async def create_contract(saveContractResource: SaveContractResource, token: str
     return contractResource
 
 @router.put("/{contract_id}")
+async def update_contract(contract_id: int, saveContractResource: SaveContractResource, token: str = Depends(bearer_scheme)) -> ContractResource:
+    user_id = JwtUtils.getUserId(token=token)
+    contractResource = contractService.updateContract(contract_id=contract_id, saveContractResource=saveContractResource, user_id=user_id)
+    return contractResource
+
+@router.put("/{contract_id}/file")
 async def upload_pdf(contract_id: int, file: UploadFile = File(...), token: str = Depends(bearer_scheme)) -> ContractResource:
     user_id = JwtUtils.getUserId(token=token)
     contractResource = await contractService.uploadPDF(file=file, contract_id=contract_id, user_id=user_id)

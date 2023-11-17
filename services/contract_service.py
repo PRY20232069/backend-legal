@@ -59,6 +59,34 @@ class ContractService:
         contract = self.contractRepository.create(saveContractResource.to_model(profile_id=existingProfile.id))
         return contract.to_resource()
     
+    def updateContract(self, contract_id: int, saveContractResource: SaveContractResource, user_id) -> ContractResource | Exception:
+        existingBank = self.bankRepository.find_by_id(saveContractResource.bank_id)
+        if not existingBank:
+            raise HTTPException(
+                status_code=404,
+                detail="Bank not found"
+            )
+
+        existingProfile = self.profileRepository.find_by_user_id(user_id=user_id)
+        if not existingProfile:
+            raise HTTPException(
+                status_code=404,
+                detail="Profile not found"
+            )
+        
+        existingContract = self.contractRepository.find_by_contract_id_and_profile_id(contract_id=contract_id, profile_id=existingProfile.id)
+        if not existingContract:
+            raise HTTPException(
+                status_code=404,
+                detail="Contract not found"
+            )
+        
+        existingContract.name = saveContractResource.name
+        existingContract.favorite = saveContractResource.favorite
+
+        contract = self.contractRepository.update(existingContract)
+        return contract.to_resource()
+    
     async def uploadPDF(self, file, contract_id, user_id) -> ContractResource | Exception:
         existingProfile = self.profileRepository.find_by_user_id(user_id=user_id)
         if not existingProfile:
@@ -190,9 +218,9 @@ class ContractService:
         file.file.seek(0)
 
         file_data = file.file.read()
-        print('PRINTING FILE DATA')
-        print(file_data)
-        print('FILE DATA PRINTED')
+        # print('PRINTING FILE DATA')
+        # print(file_data)
+        # print('FILE DATA PRINTED')
 
         # Upload the file content
         try:
