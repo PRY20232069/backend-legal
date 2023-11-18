@@ -8,11 +8,11 @@ from controllers.profiles_controller import profiles_router
 from controllers.banks_controller import banks_router
 from controllers.contracts_controller import contracts_router
 from controllers.terms_controller import terms_router
-from settings import ORIGIN_ALLOWED
+from settings import ORIGIN_ALLOWED_1, ORIGIN_ALLOWED_2
 
 app = FastAPI()
 
-origins = [ ORIGIN_ALLOWED ]
+origins = [ ORIGIN_ALLOWED_1, ORIGIN_ALLOWED_2 ]
 
 app.add_middleware(
     CORSMiddleware,

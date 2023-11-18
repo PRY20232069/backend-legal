@@ -4,6 +4,7 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from models.contract import Contract
 from sqlalchemy.exc import OperationalError
+from sqlalchemy import func
 
 class ContractRepository:
 
@@ -84,5 +85,18 @@ class ContractRepository:
         except OperationalError:
             self.session.rollback()
             result: Contract = self.session.execute(statement).scalar_one()
+            return result
+        
+    def get_count_by_bank_id(self, bank_id: int) -> int:
+        statement = select(func.count()).where(Contract.bank_id == bank_id)
+
+        try:
+            result: int = self.session.execute(statement).scalar()
+            return result
+        except NoResultFound:
+            return 0
+        except OperationalError:
+            self.session.rollback()
+            result: int = self.session.execute(statement).scalar()
             return result
         

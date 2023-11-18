@@ -1,5 +1,6 @@
 import io
 import os
+import re
 import openai
 from typing import Sequence
 from PyPDF2 import PdfReader
@@ -254,7 +255,7 @@ class ContractService:
                 content = page.extract_text()
 
                 # Split the content by paragraphs
-                paragraphs = content.split(".\n")
+                paragraphs = re.split(r'\.\s*\n', content)
 
                 for index, paragraph in enumerate(paragraphs):
                     saveTermResource = SaveTermResource(description=paragraph, index=index, num_page=page_number)
