@@ -38,7 +38,7 @@ def get_all_users_only_admin() -> Sequence[UserResource]:
     userResources = userService.getAllUsersByAdmin()
     return userResources
 
-@router.get("/")
+@router.get("")
 def get_user(token: str = Depends(bearer_scheme)) -> UserResource:
     user_id = JwtUtils.getUserId(token=token)
     userResource = userService.getUser(id=user_id)
