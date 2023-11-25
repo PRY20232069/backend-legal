@@ -23,12 +23,12 @@ bankService = BankService(bankRepository, contractRepository)
 
 bearer_scheme = HTTPBearer()
 
-@router.post("/")
+@router.post("")
 def register_bank(saveBankResource: SaveBankResource) -> BankResource:
     bank_resource = bankService.createBank(saveBankResource=saveBankResource)
     return bank_resource
 
-@router.get("/")
+@router.get("")
 def get_all_banks() -> Sequence[BankResource]:
     bankResources = bankService.getAllBanks()
     return bankResources

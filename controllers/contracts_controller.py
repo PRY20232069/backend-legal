@@ -29,7 +29,7 @@ contractService = ContractService(contractRepository, profileRepository, bankRep
 
 bearer_scheme = HTTPBearer()
 
-@router.post("/")
+@router.post("")
 async def create_contract(saveContractResource: SaveContractResource, token: str = Depends(bearer_scheme)) -> ContractResource:
     user_id = JwtUtils.getUserId(token=token)
     contractResource = contractService.createContract(saveContractResource=saveContractResource, user_id=user_id)
@@ -53,7 +53,7 @@ def generate_terms_interprations_by_contract_id(contract_id: int, token: str = D
     termResources = contractService.generateTermsInterprationsByContractId(contract_id=contract_id, user_id=user_id)
     return termResources
 
-@router.get("/")
+@router.get("")
 def get_all_contracts(token: str = Depends(bearer_scheme)) -> Sequence[ContractResource]:
     user_id = JwtUtils.getUserId(token=token)
     contractsResource = contractService.getAllContracts(user_id=user_id)
