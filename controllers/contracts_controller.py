@@ -54,9 +54,9 @@ def generate_terms_interprations_by_contract_id(contract_id: int, token: str = D
     return termResources
 
 @router.put("/{contract_id}/termsconsumerprotectionlaws")
-def match_terms_with_consumer_protection_laws(contract_id: int, token: str = Depends(bearer_scheme)) -> Sequence[TermResource]:
+def match_terms_with_consumer_protection_laws_by_contract_id(contract_id: int, token: str = Depends(bearer_scheme)) -> Sequence[TermResource]:
     user_id = JwtUtils.getUserId(token=token)
-    termResources = contractService.matchTermsWithConsumerProtectionLaws(contract_id=contract_id, user_id=user_id)
+    termResources = contractService.matchTermsWithConsumerProtectionLawsByContractId(contract_id=contract_id, user_id=user_id)
     return termResources
 
 @router.get("")

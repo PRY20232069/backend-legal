@@ -152,7 +152,7 @@ class ContractService:
 
         return [term.to_resource() for term in terms]
     
-    def matchTermsWithConsumerProtectionLaws(self, contract_id, user_id) -> Sequence[TermResource] | Exception:
+    def matchTermsWithConsumerProtectionLawsByContractId(self, contract_id, user_id) -> Sequence[TermResource] | Exception:
         existingProfile = self.profileRepository.find_by_user_id(user_id=user_id)
         if not existingProfile:
             raise HTTPException(
