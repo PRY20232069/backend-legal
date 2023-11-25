@@ -15,6 +15,7 @@ from resources.responses.contract_resource import ContractResource
 from resources.requests.save_contract_resource import SaveContractResource
 from resources.responses.term_resource import TermResource
 from settings import OPENAI_API_KEY, OPENAI_MODEL_ID, OPENAI_SYSTEM_CONTENT
+from utils.consumer_protection_law_matcher import ConsumerProtectionLawMatcher
 
 
 class ContractService:
@@ -27,6 +28,8 @@ class ContractService:
         openai.api_key = OPENAI_API_KEY
         self.openAIClient = openai
         self.openAIClient.api_timeout = 360 # 6 minutos
+
+        self.consumerProtectionLawMatcher = ConsumerProtectionLawMatcher()
 
     def createContract(self, saveContractResource: SaveContractResource, user_id) -> ContractResource | Exception:
         existingBank = self.bankRepository.find_by_id(saveContractResource.bank_id)
@@ -145,6 +148,29 @@ class ContractService:
 
         for term in terms:
             term.interpretation = self.__generate_term_interpretation__(term.description)
+            self.termRepository.update(term)
+
+        return [term.to_resource() for term in terms]
+    
+    def matchTermsWithConsumerProtectionLaws(self, contract_id, user_id) -> Sequence[TermResource] | Exception:
+        existingProfile = self.profileRepository.find_by_user_id(user_id=user_id)
+        if not existingProfile:
+            raise HTTPException(
+                status_code=404,
+                detail="Profile not found"
+            )
+        
+        existingContract = self.contractRepository.find_by_contract_id_and_profile_id(contract_id=contract_id, profile_id=existingProfile.id)
+        if not existingContract:
+            raise HTTPException(
+                status_code=404,
+                detail="Contract not found"
+            )
+        
+        terms = self.termRepository.find_all_by_contract_id(contract_id=contract_id)
+
+        for term in terms:
+            term.consumer_protection_law = self.__match_term_with_consumer_protection_law__(term.description)
             self.termRepository.update(term)
 
         return [term.to_resource() for term in terms]
@@ -275,3 +301,7 @@ class ContractService:
             ]
         )
         return response.choices[0].message.content
+    
+    def __match_term_with_consumer_protection_law__(self, term_description: str) -> str:
+        consumer_protection_law = self.consumerProtectionLawMatcher.getConsumerProtectionLaw(term_description)
+        return consumer_protection_law
