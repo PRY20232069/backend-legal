@@ -1,43 +1,43 @@
 from fastapi import Depends, HTTPException, status, Response, Request, APIRouter
 from fastapi.security import HTTPBearer
 
-from appV2.users.interfaces.REST.controllers.users_controller import router
-from appV2.users.interfaces.REST.resources.user_resource import UserResource
-from appV2.users.domain.model.usecases.get_user_usecase import GetUserUseCase
-from appV2.users.infrastructure.dependencies.dependencies import get_get_user_usecase
 from appV2._shared.application.exceptions.app_exceptions import TokenNotFoundError
 from appV2._shared.application.exceptions.app_error_message import ErrorMessageTokenNotFound
-from appV2.users.application.exceptions.user_exceptions import UserNotFoundError
-from appV2.users.application.exceptions.user_error_message import ErrorMessageUserNotFound
+from appV2.profiles.interfaces.REST.controllers.profiles_controller import router
+from appV2.profiles.interfaces.REST.resources.profile_resource import ProfileResource
+from appV2.profiles.domain.model.usecases.get_profile_usecase import GetProfileUseCase
+from appV2.profiles.infrastructure.dependencies.dependencies import get_get_profile_usecase
+from appV2.profiles.application.exceptions.profile_exceptions import ProfileNotFoundError
+from appV2.profiles.application.exceptions.profile_error_message import ErrorMessageProfileNotFound
 
 @router.get(
     '/',
-    summary='Get user',
-    response_model=UserResource,
+    summary='Get profile',
+    response_model=ProfileResource,
     status_code=status.HTTP_200_OK,
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             'model': ErrorMessageTokenNotFound
         },
         status.HTTP_404_NOT_FOUND: {
-            'model': ErrorMessageUserNotFound
+            'model': ErrorMessageProfileNotFound
         },
     },
 )
-def get_user(
+def get_profile(
     response: Response,
     request: Request,
     token: str = Depends(HTTPBearer()),
-    get_user_usecase: GetUserUseCase = Depends(get_get_user_usecase),
+    get_profile_usecase: GetProfileUseCase = Depends(get_get_profile_usecase),
 ):
     try:
-        user = get_user_usecase((token, ))
+        profile = get_profile_usecase((token, ))
     except TokenNotFoundError as exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=exception.message
         )
-    except UserNotFoundError as exception:
+    except ProfileNotFoundError as exception:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=exception.message
@@ -48,4 +48,4 @@ def get_user(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
-    return user
+    return profile

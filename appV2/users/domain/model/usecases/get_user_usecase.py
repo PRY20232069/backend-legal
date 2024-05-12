@@ -6,7 +6,7 @@ from appV2.users.domain.repositories.user_repository import UserRepository
 from appV2._shared.domain.model.usecases.base_usecase import BaseUseCase
 
 
-class GetUserUseCase(BaseUseCase[str, UserResource]):
+class GetUserUseCase(BaseUseCase[Tuple[str], UserResource]):
 
     user_repository: UserRepository
 

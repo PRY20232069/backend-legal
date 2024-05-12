@@ -3,9 +3,9 @@ from pydantic import BaseModel, Field
 from appV2.users.domain.model.entities.user import User
 
 class UserResource(BaseModel):
-    id: int
+    id: int = Field(example=1)
     email: str = Field(example='helloworld@hotmail.com')
-    token: str
+    token: str 
 
     @staticmethod
     def from_entity(entity: User) -> 'UserResource':

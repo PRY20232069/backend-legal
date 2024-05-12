@@ -5,7 +5,7 @@ from appV2.users.interfaces.REST.resources.user_resource import UserResource
 from appV2.users.domain.model.entities.user import User
 from appV2.users.domain.repositories.user_repository import UserRepository
 from appV2.users.domain.model.usecases.login_user_usecase import LoginUserUseCase
-from appV2.users.application.exceptions.user_exceptions import UsersNotFoundError
+from appV2.users.application.exceptions.user_exceptions import UserNotFoundError
 from appV2.users.domain.services.password_hasher_service import PasswordHasherService
 from appV2.users.domain.services.token_generator_service import TokenGeneratorService
 
@@ -25,7 +25,7 @@ class LoginUserUseCaseImpl(LoginUserUseCase):
 
         existing_user = self.user_repository.find_by_email(data.email)
         if existing_user is None:
-            raise UsersNotFoundError()
+            raise UserNotFoundError()
 
         if not self.password_hasher_service.verify(data.password, existing_user.password):
             raise HTTPException(

@@ -21,8 +21,7 @@ from appV2.users.domain.model.usecases.get_all_users_usecase import GetAllUsersU
 
 
 def get_user_repository(session: Session = Depends(get_session)) -> UserRepository:
-    repo = UserRepositoryImpl(session)
-    return repo
+    return UserRepositoryImpl(session)
 
 def get_password_hasher_service() -> PasswordHasherService:
     return PasswordHasherServiceImpl()

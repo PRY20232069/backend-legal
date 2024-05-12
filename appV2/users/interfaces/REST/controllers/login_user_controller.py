@@ -7,7 +7,7 @@ from appV2.users.domain.model.usecases.login_user_usecase import LoginUserUseCas
 from appV2.users.infrastructure.dependencies.dependencies import get_login_user_usecase
 from appV2._shared.application.exceptions.app_exceptions import InvalidCredentialsError
 from appV2._shared.application.exceptions.app_error_message import ErrorMessageInvalidCredentials
-from appV2.users.application.exceptions.user_exceptions import UsersNotFoundError
+from appV2.users.application.exceptions.user_exceptions import UserNotFoundError
 from appV2.users.application.exceptions.user_error_message import ErrorMessageUserNotFound
 
 @router.post(
@@ -37,7 +37,7 @@ def login_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=exception.message
         )
-    except UsersNotFoundError as exception:
+    except UserNotFoundError as exception:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=exception.message
