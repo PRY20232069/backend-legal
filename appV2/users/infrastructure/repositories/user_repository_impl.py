@@ -2,6 +2,8 @@ from sqlalchemy import select, update, delete
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
+from typing import Sequence
+
 from appV2.users.domain.model.entities.user import User
 from appV2.users.domain.repositories.user_repository import UserRepository
 
@@ -16,4 +18,16 @@ class UserRepositoryImpl(UserRepository):
             result: User = self.session.execute(statement).scalar_one()
         except NoResultFound:
             return None
+        return result
+
+    def findall(self) -> Sequence[User]:
+        statement = select(User)
+        try:
+            result: Sequence[User] = self.session.execute(statement).scalars().all()
+        except NoResultFound:
+            return []
+        return result
+
+    def find_by_id(self, id: int) -> User | None:
+        result: User | None = self.session.get(User, id)
         return result
