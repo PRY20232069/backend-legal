@@ -1,0 +1,6 @@
+from appV2.contracts.interfaces.REST.controllers.contracts_controller import router
+from appV2.contracts.interfaces.REST.controllers.upload_contract_controller import upload_contract
+from appV2.contracts.interfaces.REST.controllers.get_all_contracts_controller import get_all_contracts
+from appV2.contracts.interfaces.REST.controllers.get_contract_by_id_controller import get_contract_by_id
+
+contract_router = router

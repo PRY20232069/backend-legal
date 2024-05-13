@@ -6,7 +6,7 @@ from appV2.profiles.domain.repositories.profile_repository import ProfileReposit
 from appV2._shared.domain.model.usecases.base_usecase import BaseUseCase
 
 
-class GetAllProfilesUseCase(BaseUseCase[str, List[ProfileResource]]):
+class GetAllProfilesUseCase(BaseUseCase[Tuple[str], List[ProfileResource]]):
 
     profile_repository: ProfileRepository
 
