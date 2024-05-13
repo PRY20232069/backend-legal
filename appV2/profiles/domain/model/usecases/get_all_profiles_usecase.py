@@ -8,7 +8,7 @@ from appV2._shared.domain.model.usecases.base_usecase import BaseUseCase
 
 class GetAllProfilesUseCase(BaseUseCase[str, List[ProfileResource]]):
 
-    user_repository: ProfileRepository
+    profile_repository: ProfileRepository
 
     @abstractmethod
     def __call__(self, args: Tuple[str]) -> List[ProfileResource]:
