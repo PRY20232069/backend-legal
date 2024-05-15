@@ -2,6 +2,7 @@ import logging
 from typing import Iterator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.pool import NullPool
 from settings import DB_CONNECTION_URI
 
 # Models
@@ -16,7 +17,8 @@ logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 engine = create_engine(
     DB_CONNECTION_URI,
-    future=True
+    future=True,
+    poolclass=NullPool,
 )
 
 SessionLocal = sessionmaker(

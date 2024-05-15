@@ -1,13 +1,14 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from appV1.models.base.base_entity import Base
-from appV1.repositories.configuration.database import engine
-from appV1.controllers.users_controller import users_router
-from appV1.controllers.profiles_controller import profiles_router
-from appV1.controllers.banks_controller import banks_router
-from appV1.controllers.contracts_controller import contracts_router
-from appV1.controllers.terms_controller import terms_router
+
+from appV2._shared.domain.model.entities.base_entity import Base
+from appV2._shared.infrastructure.configuration.database import engine
+from appV2.users.interfaces.REST.user_routes import user_router
+from appV2.profiles.interfaces.REST.profile_routes import profile_router
+from appV2.banks.interfaces.REST.bank_routes import bank_router
+from appV2.contracts.interfaces.REST.contract_routes import contract_router
+
 from settings import ORIGIN_ALLOWED_1, ORIGIN_ALLOWED_2, ORIGIN_ALLOWED_3, ORIGIN_ALLOWED_4, ORIGIN_ALLOWED_5, ORIGIN_ALLOWED_6
 
 app = FastAPI()
@@ -22,11 +23,10 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-app.include_router(users_router)
-app.include_router(profiles_router)
-app.include_router(banks_router)
-app.include_router(contracts_router)
-app.include_router(terms_router)
+app.include_router(user_router)
+app.include_router(profile_router)
+app.include_router(bank_router)
+app.include_router(contract_router)
 
 @app.on_event('startup')
 def startup_event():
