@@ -5,8 +5,7 @@ from appV2.users.interfaces.REST.resources.save_user_resource import SaveUserRes
 from appV2.users.interfaces.REST.resources.user_resource import UserResource
 from appV2.users.domain.model.usecases.register_user_usecase import RegisterUserUseCase
 from appV2.users.infrastructure.dependencies.dependencies import get_register_user_usecase
-from appV2.users.application.exceptions.user_exceptions import UserAlreadyExistsError
-from appV2.users.application.exceptions.user_error_message import ErrorMessageUserAlreadyExists
+from appV2.users.application.exceptions.user_exceptions import UserAlreadyExistsError, RegisterUserError
 
 @router.post(
     '/register',
@@ -14,9 +13,8 @@ from appV2.users.application.exceptions.user_error_message import ErrorMessageUs
     response_model=UserResource,
     status_code=status.HTTP_201_CREATED,
     responses={
-        status.HTTP_409_CONFLICT: {
-            'model': ErrorMessageUserAlreadyExists
-        }
+        UserAlreadyExistsError().status_code: UserAlreadyExistsError().get_response_model(),
+        RegisterUserError().status_code: RegisterUserError().get_response_model(),
     },
 )
 def register_user(
@@ -25,16 +23,5 @@ def register_user(
     request: Request,
     register_user_usecase: RegisterUserUseCase = Depends(get_register_user_usecase),
 ):
-    try:
-        user = register_user_usecase((data, ))
-    except UserAlreadyExistsError as exception:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=exception.message
-        )
-    except Exception as _exception:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
-
+    user = register_user_usecase((data, ))
     return user

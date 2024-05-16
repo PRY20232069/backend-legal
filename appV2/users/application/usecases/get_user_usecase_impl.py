@@ -16,7 +16,7 @@ class GetUserUseCaseImpl(GetUserUseCase):
 
     def __call__(self, args: Tuple[str]) -> UserResource:
         token, = args
-        user_id = JwtUtils.getUserId(token)
+        user_id = JwtUtils.get_user_id(token)
 
         existing_user = self.user_repository.find_by_id(user_id)
         if existing_user is None:

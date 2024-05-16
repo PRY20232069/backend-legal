@@ -6,12 +6,14 @@ from appV2.profiles.interfaces.REST.resources.profile_resource import ProfileRes
 from appV2.profiles.domain.repositories.profile_repository import ProfileRepository
 from appV2._shared.domain.model.usecases.base_usecase import BaseUseCase
 from appV2._shared.domain.repositories.unit_of_work import UnitOfWork
+from appV2.users.domain.repositories.user_repository import UserRepository
 
 
 class CreateProfileUseCase(BaseUseCase[Tuple[str, SaveProfileResource], ProfileResource]):
 
     unit_of_work: UnitOfWork
     profile_repository: ProfileRepository
+    user_repository: UserRepository
 
     @abstractmethod
     def __call__(self, args: Tuple[str, SaveProfileResource]) -> ProfileResource:

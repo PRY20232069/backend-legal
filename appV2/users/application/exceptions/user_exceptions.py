@@ -1,9 +1,17 @@
-from appV2._shared.application.exceptions.base_exception import BaseError
+from appV2._shared.application.exceptions.base_exceptions import BaseNotFoundError, BaseConflictError, BaseUnauthorizedError, BaseBadRequestError
 
 
-class UserNotFoundError(BaseError):
+class UserNotFoundError(BaseNotFoundError):
     message = 'User does not exist.'
 
 
-class UserAlreadyExistsError(BaseError):
+class UserAlreadyExistsError(BaseConflictError):
     message = 'User already exists'
+
+
+class UserInvalidCredentialsError(BaseUnauthorizedError):
+    message = 'Invalid credentials.'
+    
+    
+class RegisterUserError(BaseBadRequestError):
+    message = 'An error occurred while registering the user.'

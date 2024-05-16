@@ -21,7 +21,7 @@ class CreateBankUseCaseImpl(CreateBankUseCase):
 
     def __call__(self, args: Tuple[str, SaveBankResource]) -> BankResource:
         token, data = args
-        user_id = JwtUtils.getUserId(token)
+        user_id = JwtUtils.get_user_id(token)
 
         bank = Bank(
             id=None,
@@ -34,12 +34,14 @@ class CreateBankUseCaseImpl(CreateBankUseCase):
 
         try:
             self.bank_repository.create(bank)
+            self.unit_of_work.commit()
         except Exception as _e:
             self.unit_of_work.rollback()
-            raise
-
-        self.unit_of_work.commit()
+            raise CreateBankError()
 
         created_bank = self.bank_repository.find_by_name(bank.name)
 
-        return BankResource.from_entity(created_bank)
+        bank_resource = BankResource.from_entity(created_bank)
+        bank_resource.contracts_count = 0
+        
+        return bank_resource

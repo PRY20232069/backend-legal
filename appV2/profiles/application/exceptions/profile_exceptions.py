@@ -1,9 +1,13 @@
-from appV2._shared.application.exceptions.base_exception import BaseError
+from appV2._shared.application.exceptions.base_exceptions import BaseNotFoundError, BaseConflictError, BaseBadRequestError
 
 
-class ProfileNotFoundError(BaseError):
+class ProfileNotFoundError(BaseNotFoundError):
     message = 'Profile does not exist.'
 
 
-class ProfileAlreadyExistsError(BaseError):
+class ProfileAlreadyExistsError(BaseConflictError):
     message = 'Profile already exists'
+
+
+class CreateProfileError(BaseBadRequestError):
+    message = 'An error occurred while creating the profile'

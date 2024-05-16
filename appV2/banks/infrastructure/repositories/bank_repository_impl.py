@@ -1,16 +1,22 @@
 from sqlalchemy import select, update, delete
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from typing import Sequence
 
 from appV2.banks.domain.model.entities.bank import Bank
 from appV2.banks.domain.repositories.bank_repository import BankRepository
+from appV2.contracts.domain.model.entities.contract import Contract
 
 
 class BankRepositoryImpl(BankRepository):
     def __init__(self, session: Session):
         super().__init__(session)
+
+    def find_by_id(self, id: int) -> Bank | None:
+        result: Bank | None = self.session.get(Bank, id)
+        return result
 
     def findall(self) -> Sequence[Bank]:
         statement = select(Bank)
@@ -27,3 +33,11 @@ class BankRepositoryImpl(BankRepository):
         except NoResultFound:
             result = None
         return result
+
+    def get_contracts_count_by_id(self, id: int) -> int:
+        statement = select(func.count(Contract.id)).where(Contract.bank_id == id)
+        result = self.session.execute(statement).scalar()
+        if result is None:
+            return 0
+        else:
+            return result

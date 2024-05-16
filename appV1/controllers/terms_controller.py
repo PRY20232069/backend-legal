@@ -29,19 +29,19 @@ bearer_scheme = HTTPBearer()
 
 @router.post("/contracts/{contract_id}/terms")
 def register_term(saveTermResource: SaveTermResource, contract_id: int, token: str = Depends(bearer_scheme)) -> TermResource:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     termResource = termService.registerTerm(saveTermResource=saveTermResource, contract_id=contract_id, user_id=user_id)
     return termResource
 
 @router.put("/contracts/{contract_id}/terms/{term_id}")
 def generate_term_interpretation(contract_id: int, term_id: int, token: str = Depends(bearer_scheme)):
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     termResource = termService.generateTermInterpretation(contract_id=contract_id, term_id=term_id, user_id=user_id)
     return termResource
 
 @router.get("/contracts/{contract_id}/terms")
 def get_all_terms_by_contract_id(contract_id: int, token: str = Depends(bearer_scheme)) -> Sequence[TermResource]:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     termsResource = termService.getAllTermsByContractId(contract_id, user_id)
     return termsResource
 

@@ -1,13 +1,15 @@
-from appV2._shared.application.exceptions.base_exception import BaseError
+from appV2._shared.application.exceptions.base_exceptions import BaseForbiddenError, BaseUnauthorizedError, BaseUnprocessableEntityError
 
 
-class InvalidCredentialsError(BaseError):
-    message = 'Invalid credentials.'
+class TokenInvalidError(BaseUnprocessableEntityError):
+    message = 'Invalid token'
 
 
-class TokenNotFoundError(BaseError):
-    message = 'Token not found.'
+class TokenNotFoundError(BaseForbiddenError):
+    message = {
+        'detail': 'Not authenticated'
+    }
 
 
-class TokenExpiredError(BaseError):
-    message = 'Token expired.'
+class TokenExpiredError(BaseUnauthorizedError):
+    message = 'Token expired'

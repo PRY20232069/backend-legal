@@ -18,3 +18,14 @@ class Contract(Base):
     uploaded_date: Mapped[datetime] | datetime = Column(TIMESTAMP, server_default=func.now(), nullable=False)
     profile_id: int = Column(Integer, ForeignKey('profiles.id'), nullable=False)
     bank_id: int = Column(Integer, ForeignKey('banks.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'favorite': self.favorite,
+            'file_url': self.file_url,
+            'uploaded_date': self.uploaded_date,
+            'profile_id': self.profile_id,
+            'bank_id': self.bank_id
+        }

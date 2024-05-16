@@ -2,7 +2,7 @@ from sqlalchemy import select, update, delete
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
-from typing import Sequence
+from typing import Sequence, List
 
 from appV2.contracts.domain.model.entities.contract import Contract
 from appV2.contracts.domain.repositories.contract_repository import ContractRepository
@@ -20,7 +20,7 @@ class ContractRepositoryImpl(ContractRepository):
             result = None
         return result
 
-    def findall_by_profile_id(self, profile_id: int) -> list[Contract]:
+    def findall_by_profile_id(self, profile_id: int) -> List[Contract]:
         return self.session.query(Contract).filter(Contract.profile_id == profile_id).all()
 
     def find_by_id_and_profile_id(self, contract_id: int, profile_id: int) -> Contract | None:
@@ -30,3 +30,18 @@ class ContractRepositoryImpl(ContractRepository):
         except NoResultFound:
             result = None
         return result
+
+    def update(self, contract: Contract) -> Contract:
+        update_data = contract.to_dict()
+        update_data.pop(Contract.uploaded_date.key)
+
+        statement = update(
+            Contract
+        ).where(
+            Contract.id == contract.id
+        ).values(
+            update_data
+        )
+
+        self.session.execute(statement)
+        return contract

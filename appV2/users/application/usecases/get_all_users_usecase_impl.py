@@ -15,7 +15,7 @@ class GetAllUsersUseCaseImpl(GetAllUsersUseCase):
 
     def __call__(self, args: Tuple[str]) -> List[UserResource]:
         token, = args
-        user_id = JwtUtils.getUserId(token)
+        user_id = JwtUtils.get_user_id(token)
 
         existing_users = self.user_repository.findall()
 

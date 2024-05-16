@@ -6,6 +6,7 @@ from appV2.contracts.domain.model.usecases.get_contract_by_id_usecase import Get
 from appV2.contracts.application.exceptions.contract_exceptions import ContractNotFoundError
 from appV2.profiles.application.exceptions.profile_exceptions import ProfileNotFoundError
 from appV2.profiles.domain.repositories.profile_repository import ProfileRepository
+from appV2._shared.application.exceptions.app_exceptions import TokenInvalidError
 
 from utils.jwt_utils import JwtUtils
 
@@ -20,7 +21,11 @@ class GetContractByIdUseCaseImpl(GetContractByIdUseCase):
 
     def __call__(self, args: Tuple[str, int]) -> ContractResource:
         token, contract_id = args
-        user_id = JwtUtils.getUserId(token)
+
+        if not JwtUtils.is_valid(token):
+            raise TokenInvalidError()
+
+        user_id = JwtUtils.get_user_id(token)
 
         existing_profile = self.profile_repository.find_by_user_id(user_id)
         if existing_profile is None:

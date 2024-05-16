@@ -8,6 +8,7 @@ from appV2.users.domain.model.usecases.login_user_usecase import LoginUserUseCas
 from appV2.users.application.exceptions.user_exceptions import UserNotFoundError
 from appV2.users.domain.services.password_hasher_service import PasswordHasherService
 from appV2.users.domain.services.token_generator_service import TokenGeneratorService
+from appV2.users.application.exceptions.user_exceptions import UserInvalidCredentialsError
 
 class LoginUserUseCaseImpl(LoginUserUseCase):
 
@@ -28,10 +29,7 @@ class LoginUserUseCaseImpl(LoginUserUseCase):
             raise UserNotFoundError()
 
         if not self.password_hasher_service.verify(data.password, existing_user.password):
-            raise HTTPException(
-                status_code=400,
-                detail="Invalid credentials"
-            )
+            raise UserInvalidCredentialsError()
 
         user_resource = UserResource.from_entity(existing_user)
         user_resource.token = self.token_generator_service.generate(existing_user.id)

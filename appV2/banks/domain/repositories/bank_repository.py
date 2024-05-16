@@ -9,3 +9,7 @@ class BankRepository(BaseRepository[Bank]):
     @abstractmethod
     def find_by_name(self, name: str) -> Bank | None:
         raise NotImplementedError()
+    
+    @abstractmethod
+    def get_contracts_count_by_id(self, id: int) -> int:
+        raise NotImplementedError()

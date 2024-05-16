@@ -1,9 +1,17 @@
-from appV2._shared.application.exceptions.base_exception import BaseError
+from appV2._shared.application.exceptions.base_exceptions import BaseError, BaseBadRequestError, BaseNotFoundError, BaseConflictError
 
 
-class ContractNotFoundError(BaseError):
+class ContractNotFoundError(BaseNotFoundError):
     message = 'Contract does not exist.'
 
 
-class ContractAlreadyExistsError(BaseError):
+class ContractAlreadyExistsError(BaseConflictError):
     message = 'Contract already exists'
+
+
+class UploadContractError(BaseBadRequestError):
+    message = 'An error occurred while uploading the contract'
+
+    
+class UpdateContractError(BaseBadRequestError):
+    message = 'An error occurred while updating the contract'

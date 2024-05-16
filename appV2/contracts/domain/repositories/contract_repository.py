@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import List
 
 from appV2._shared.domain.repositories.base_repository import BaseRepository
 from appV2.contracts.domain.model.entities.contract import Contract
@@ -11,7 +12,7 @@ class ContractRepository(BaseRepository[Contract]):
         raise NotImplementedError()
 
     @abstractmethod
-    def findall_by_profile_id(self, profile_id: int) -> list[Contract]:
+    def findall_by_profile_id(self, profile_id: int) -> List[Contract]:
         raise NotImplementedError()
 
     @abstractmethod

@@ -31,43 +31,43 @@ bearer_scheme = HTTPBearer()
 
 @router.post("")
 async def create_contract(saveContractResource: SaveContractResource, token: str = Depends(bearer_scheme)) -> ContractResource:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     contractResource = contractService.createContract(saveContractResource=saveContractResource, user_id=user_id)
     return contractResource
 
 @router.put("/{contract_id}")
 async def update_contract(contract_id: int, saveContractResource: SaveContractResource, token: str = Depends(bearer_scheme)) -> ContractResource:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     contractResource = contractService.updateContract(contract_id=contract_id, saveContractResource=saveContractResource, user_id=user_id)
     return contractResource
 
 @router.put("/{contract_id}/file")
 async def upload_pdf(contract_id: int, file: UploadFile = File(...), token: str = Depends(bearer_scheme)) -> ContractResource:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     contractResource = await contractService.uploadPDF(file=file, contract_id=contract_id, user_id=user_id)
     return contractResource
 
 @router.put("/{contract_id}/termsinterpretations")
 def generate_terms_interprations_by_contract_id(contract_id: int, token: str = Depends(bearer_scheme)) -> Sequence[TermResource]:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     termResources = contractService.generateTermsInterprationsByContractId(contract_id=contract_id, user_id=user_id)
     return termResources
 
 @router.put("/{contract_id}/termsconsumerprotectionlaws")
 def match_terms_with_consumer_protection_laws_by_contract_id(contract_id: int, token: str = Depends(bearer_scheme)) -> Sequence[TermResource]:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     termResources = contractService.matchTermsWithConsumerProtectionLawsByContractId(contract_id=contract_id, user_id=user_id)
     return termResources
 
 @router.get("")
 def get_all_contracts(token: str = Depends(bearer_scheme)) -> Sequence[ContractResource]:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     contractsResource = contractService.getAllContracts(user_id=user_id)
     return contractsResource
 
 @router.get("/search/{name}")
 def get_all_contracts_by_name(name: str, token: str = Depends(bearer_scheme)) -> Sequence[ContractResource]:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     contractsResource = contractService.getAllContractsByName(name=name, user_id=user_id)
     return contractsResource
 
@@ -78,6 +78,6 @@ def get_all_contracts_only_admin() -> Sequence[ContractResource]:
 
 @router.get("/{contract_id}")
 def get_contract_by_id(contract_id: int, token: str = Depends(bearer_scheme)) -> ContractResource:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     contractResource = contractService.getContractByContractId(contract_id=contract_id, user_id=user_id)
     return contractResource

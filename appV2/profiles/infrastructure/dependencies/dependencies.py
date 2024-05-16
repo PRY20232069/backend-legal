@@ -12,6 +12,8 @@ from appV2.profiles.application.usecases.get_profile_usecase_impl import GetProf
 from appV2.profiles.domain.model.usecases.get_profile_usecase import GetProfileUseCase
 from appV2.profiles.application.usecases.get_all_profiles_usecase_impl import GetAllProfilesUseCaseImpl
 from appV2.profiles.domain.model.usecases.get_all_profiles_usecase import GetAllProfilesUseCase
+from appV2.users.domain.repositories.user_repository import UserRepository
+from appV2.users.infrastructure.dependencies.dependencies import get_user_repository
 
 
 def get_profile_repository(session: Session = Depends(get_session)) -> ProfileRepository:
@@ -19,23 +21,29 @@ def get_profile_repository(session: Session = Depends(get_session)) -> ProfileRe
 
 def get_create_profile_usecase(
     unit_of_work: UnitOfWork = Depends(get_unit_of_work),
-    profile_repository: ProfileRepository = Depends(get_profile_repository)
+    profile_repository: ProfileRepository = Depends(get_profile_repository),
+    user_repository: UserRepository = Depends(get_user_repository)
 ) -> CreateProfileUseCaseImpl:
     return CreateProfileUseCaseImpl(
         unit_of_work, 
-        profile_repository
+        profile_repository,
+        user_repository
     )
 
 def get_get_profile_usecase(
-    profile_repository: ProfileRepository = Depends(get_profile_repository)
+    profile_repository: ProfileRepository = Depends(get_profile_repository),
+    user_repository: UserRepository = Depends(get_user_repository)
 ) -> GetProfileUseCase:
     return GetProfileUseCaseImpl(
-        profile_repository
+        profile_repository,
+        user_repository
     )
 
 def get_get_all_profiles_usecase(
-    profile_repository: ProfileRepository = Depends(get_profile_repository)
+    profile_repository: ProfileRepository = Depends(get_profile_repository),
+    user_repository: UserRepository = Depends(get_user_repository)
 ) -> GetAllProfilesUseCase:
     return GetAllProfilesUseCaseImpl(
-        profile_repository
+        profile_repository,
+        user_repository
     )

@@ -23,7 +23,7 @@ bearer_scheme = HTTPBearer()
 
 @router.post("")
 def create_profile(saveProfileResource: SaveProfileResource, token: str = Depends(bearer_scheme)) -> ProfileResource:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     profileResource = profileService.createProfile(saveProfileResource=saveProfileResource, user_id=user_id)
     return profileResource
 
@@ -34,6 +34,6 @@ def get_all_profiles_only_admin() -> Sequence[ProfileResource]:
 
 @router.get("")
 def get_profile(token: str = Depends(bearer_scheme)) -> ProfileResource:
-    user_id = JwtUtils.getUserId(token=token)
+    user_id = JwtUtils.get_user_id(token=token)
     profileResource = profileService.getProfile(user_id=user_id)
     return profileResource

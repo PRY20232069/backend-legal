@@ -40,8 +40,8 @@ class BaseRepository(ABC, Generic[_T]):
         ).returning(
             _T
         )
-        enity_mapping = self.session.execute(statement).mappings().one()
-        result = _T(**enity_mapping)
+        entity_mapping = self.session.execute(statement).mappings().one()
+        result = _T(**entity_mapping)
         return result
 
     def delete_by_id(self, id_: int) -> _T:

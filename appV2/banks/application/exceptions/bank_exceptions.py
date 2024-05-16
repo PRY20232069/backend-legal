@@ -1,9 +1,13 @@
-from appV2._shared.application.exceptions.base_exception import BaseError
+from appV2._shared.application.exceptions.base_exceptions import BaseError, BaseBadRequestError, BaseNotFoundError, BaseConflictError
 
 
-class BankNotFoundError(BaseError):
+class BankNotFoundError(BaseNotFoundError):
     message = 'Bank does not exist.'
 
 
-class BankAlreadyExistsError(BaseError):
+class BankAlreadyExistsError(BaseConflictError):
     message = 'Bank already exists'
+
+
+class CreateBankError(BaseBadRequestError):
+    message = 'An error occurred while creating the bank'
