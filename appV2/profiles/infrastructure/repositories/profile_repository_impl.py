@@ -26,3 +26,18 @@ class ProfileRepositoryImpl(ProfileRepository):
         except NoResultFound:
             return []
         return result
+
+    def update(self, profile: Profile) -> Profile:
+        update_data = profile.to_dict()
+        update_data.pop(Profile.created_at.key)
+
+        statement = update(
+            Profile
+        ).where(
+            Profile.id == profile.id
+        ).values(
+            update_data
+        )
+
+        self.session.execute(statement)
+        return profile

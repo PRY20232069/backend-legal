@@ -14,7 +14,7 @@ from appV2.profiles.application.exceptions.profile_exceptions import ProfileNotF
 
 @router.put(
     '/{contract_id}',
-    summary='Upload a new contract',
+    summary='Update a contract',
     response_model=ContractResource,
     status_code=status.HTTP_200_OK,
     responses={

@@ -15,3 +15,7 @@ class UserInvalidCredentialsError(BaseUnauthorizedError):
     
 class RegisterUserError(BaseBadRequestError):
     message = 'An error occurred while registering the user.'
+
+    
+class RecoverUserError(BaseBadRequestError):
+    message = 'An error occurred while recovering the user.'

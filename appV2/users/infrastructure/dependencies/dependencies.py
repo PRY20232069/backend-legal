@@ -12,6 +12,8 @@ from appV2.users.domain.services.token_generator_service import TokenGeneratorSe
 from appV2.users.infrastructure.services.token_generator_service_impl import TokenGeneratorServiceImpl
 from appV2.users.application.usecases.register_user_usecase_impl import RegisterUserUseCaseImpl
 from appV2.users.domain.model.usecases.register_user_usecase import RegisterUserUseCase
+from appV2.users.application.usecases.recover_user_usecase_impl import RecoverUserUseCaseImpl
+from appV2.users.domain.model.usecases.recover_user_usecase import RecoverUserUseCase
 from appV2.users.application.usecases.login_user_usecase_impl import LoginUserUseCaseImpl
 from appV2.users.domain.model.usecases.login_user_usecase import LoginUserUseCase
 from appV2.users.application.usecases.get_user_usecase_impl import GetUserUseCaseImpl
@@ -40,6 +42,17 @@ def get_register_user_usecase(
         user_repository, 
         password_hasher_service, 
         token_generator_service
+    )
+
+def get_recover_user_usecase(
+    unit_of_work: UnitOfWork = Depends(get_unit_of_work),
+    user_repository: UserRepository = Depends(get_user_repository),
+    password_hasher_service: PasswordHasherService = Depends(get_password_hasher_service),
+) -> RecoverUserUseCase:
+    return RecoverUserUseCaseImpl(
+        unit_of_work, 
+        user_repository, 
+        password_hasher_service, 
     )
 
 def get_login_user_usecase(

@@ -1,4 +1,5 @@
 from typing import Tuple
+from fastapi.security import HTTPAuthorizationCredentials
 
 from appV2.profiles.interfaces.REST.resources.profile_resource import ProfileResource
 from appV2.profiles.domain.repositories.profile_repository import ProfileRepository
@@ -17,7 +18,7 @@ class GetProfileUseCaseImpl(GetProfileUseCase):
         self.profile_repository = profile_repository
         self.user_repository = user_repository
 
-    def __call__(self, args: Tuple[str]) -> ProfileResource:
+    def __call__(self, args: Tuple[HTTPAuthorizationCredentials]) -> ProfileResource:
         token, = args
         user_id = JwtUtils.get_user_id(token)
 

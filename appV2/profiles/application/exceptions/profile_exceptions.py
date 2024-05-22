@@ -11,3 +11,7 @@ class ProfileAlreadyExistsError(BaseConflictError):
 
 class CreateProfileError(BaseBadRequestError):
     message = 'An error occurred while creating the profile'
+
+    
+class UpdateProfileError(BaseBadRequestError):
+    message = 'An error occurred while updating the profile'

@@ -20,3 +20,17 @@ class Profile(Base):
     document_number: Mapped[str] | str = Column(String(MAX_CHARS_ONE_LINE_SUPER_SMALL), nullable=False)
     created_at: Mapped[datetime] | datetime = Column(TIMESTAMP, server_default=func.now(), nullable=False)
     user_id: Mapped[int] | int = Column(Integer, ForeignKey('users.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'last_name': self.last_name,
+            'birth_date': self.birth_date,
+            'district': self.district,
+            'region': self.region,
+            'gender': self.gender,
+            'document_number': self.document_number,
+            'created_at': self.created_at,
+            'user_id': self.user_id
+        }

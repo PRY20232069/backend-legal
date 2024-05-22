@@ -31,3 +31,17 @@ class UserRepositoryImpl(UserRepository):
     def find_by_id(self, id: int) -> User | None:
         result: User | None = self.session.get(User, id)
         return result
+
+    def update(self, user: User) -> User:
+        update_data = user.to_dict()
+
+        statement = update(
+            User
+        ).where(
+            User.id == user.id
+        ).values(
+            update_data
+        )
+
+        self.session.execute(statement)
+        return user

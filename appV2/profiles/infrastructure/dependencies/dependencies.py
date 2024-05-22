@@ -8,6 +8,8 @@ from appV2.profiles.infrastructure.repositories.profile_repository_impl import P
 from appV2.profiles.domain.repositories.profile_repository import ProfileRepository
 from appV2.profiles.application.usecases.create_profile_usecase_impl import CreateProfileUseCaseImpl
 from appV2.profiles.domain.model.usecases.create_profile_usecase import CreateProfileUseCase
+from appV2.profiles.application.usecases.update_profile_usecase_impl import UpdateProfileUseCaseImpl
+from appV2.profiles.domain.model.usecases.update_profile_usecase import UpdateProfileUseCase
 from appV2.profiles.application.usecases.get_profile_usecase_impl import GetProfileUseCaseImpl
 from appV2.profiles.domain.model.usecases.get_profile_usecase import GetProfileUseCase
 from appV2.profiles.application.usecases.get_all_profiles_usecase_impl import GetAllProfilesUseCaseImpl
@@ -23,8 +25,19 @@ def get_create_profile_usecase(
     unit_of_work: UnitOfWork = Depends(get_unit_of_work),
     profile_repository: ProfileRepository = Depends(get_profile_repository),
     user_repository: UserRepository = Depends(get_user_repository)
-) -> CreateProfileUseCaseImpl:
+) -> CreateProfileUseCase:
     return CreateProfileUseCaseImpl(
+        unit_of_work, 
+        profile_repository,
+        user_repository
+    )
+
+def get_update_profile_usecase(
+    unit_of_work: UnitOfWork = Depends(get_unit_of_work),
+    profile_repository: ProfileRepository = Depends(get_profile_repository),
+    user_repository: UserRepository = Depends(get_user_repository)
+) -> UpdateProfileUseCase:
+    return UpdateProfileUseCaseImpl(
         unit_of_work, 
         profile_repository,
         user_repository

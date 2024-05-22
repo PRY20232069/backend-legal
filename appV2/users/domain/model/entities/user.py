@@ -13,9 +13,9 @@ class User(Base):
     email: Mapped[str] | str = Column(String(MAX_CHARS_ONE_LINE), nullable=False, unique=True, index=True)
     password: Mapped[str] | str = Column(String(MAX_CHARS_ONE_LINE), nullable=False)
 
-    # def to_resource(self) -> UserResource:
-    #     return UserResource(
-    #         id=self.id,
-    #         email=self.email,
-    #         token=''
-    #     )
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'password': self.password
+        }
