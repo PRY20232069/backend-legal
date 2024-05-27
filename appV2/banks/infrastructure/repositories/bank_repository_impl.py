@@ -34,7 +34,7 @@ class BankRepositoryImpl(BankRepository):
             result = None
         return result
 
-    def get_contracts_count_by_id(self, id: int) -> int:
+    def get_contracts_count_by_bank_id(self, id: int) -> int:
         statement = select(func.count(Contract.id)).where(Contract.bank_id == id)
         result = self.session.execute(statement).scalar()
         if result is None:

@@ -10,8 +10,12 @@ from appV2.contracts.infrastructure.repositories.term_repository_impl import Ter
 from appV2.contracts.domain.repositories.term_repository import TermRepository
 from appV2.contracts.application.usecases.upload_contract_usecase_impl import UploadContractUseCaseImpl
 from appV2.contracts.domain.model.usecases.upload_contract_usecase import UploadContractUseCase
+from appV2.contracts.application.usecases.create_terms_by_contract_id_usecase_impl import CreateTermsByContractIdUseCaseImpl
+from appV2.contracts.domain.model.usecases.create_terms_by_contract_id_usecase import CreateTermsByContractIdUseCase
 from appV2.contracts.application.usecases.update_contract_usecase_impl import UpdateContractUseCaseImpl
 from appV2.contracts.domain.model.usecases.update_contract_usecase import UpdateContractUseCase
+from appV2.contracts.application.usecases.delete_contract_usecase_impl import DeleteContractUseCaseImpl
+from appV2.contracts.domain.model.usecases.delete_contract_usecase import DeleteContractUseCase
 from appV2.contracts.application.usecases.get_all_contracts_usecase_impl import GetAllContractsUseCaseImpl
 from appV2.contracts.domain.model.usecases.get_all_contracts_usecase import GetAllContractsUseCase
 from appV2.contracts.application.usecases.get_contract_by_id_usecase_impl import GetContractByIdUseCaseImpl
@@ -55,29 +59,42 @@ def get_term_interpretation_generator_service() -> TermInterpretationGeneratorSe
 def get_consumer_protection_law_matcher_service() -> ConsumerProtectionLawMatcherService:
     return ConsumerProtectionLawMatcherServiceImpl()
 
+def get_create_terms_usecase(
+    unit_of_work: UnitOfWork = Depends(get_unit_of_work),
+    term_repository: TermRepository = Depends(get_term_repository),
+    contract_repository: ContractRepository = Depends(get_contract_repository),
+    profile_repository: ProfileRepository = Depends(get_profile_repository),
+    document_processor_service: DocumentProcessorService = Depends(get_document_processor_service),
+    term_interpretation_generator_service: TermInterpretationGeneratorService = Depends(get_term_interpretation_generator_service),
+    consumer_protection_law_matcher_service: ConsumerProtectionLawMatcherService = Depends(get_consumer_protection_law_matcher_service),
+) -> CreateTermsByContractIdUseCase:
+    return CreateTermsByContractIdUseCaseImpl(
+        unit_of_work, 
+        term_repository,
+        contract_repository,
+        profile_repository,
+        document_processor_service,
+        term_interpretation_generator_service,
+        consumer_protection_law_matcher_service,
+    )
+
 def get_upload_contract_usecase(
     unit_of_work: UnitOfWork = Depends(get_unit_of_work),
     contract_repository: ContractRepository = Depends(get_contract_repository),
     profile_repository: ProfileRepository = Depends(get_profile_repository),
     bank_repository: BankRepository = Depends(get_bank_repository),
-    term_repository: TermRepository = Depends(get_term_repository),
     pdf_validator_service: PdfValidatorService = Depends(get_pdf_validator_service),
     firebase_storage_service: FirebaseStorageService = Depends(get_firebase_storage_service),
-    document_processor_service: DocumentProcessorService = Depends(get_document_processor_service),
-    term_interpretation_generator_service: TermInterpretationGeneratorService = Depends(get_term_interpretation_generator_service),
-    consumer_protection_law_matcher_service: ConsumerProtectionLawMatcherService = Depends(get_consumer_protection_law_matcher_service)
+    create_terms_usecase: CreateTermsByContractIdUseCase = Depends(get_create_terms_usecase)
 ) -> UploadContractUseCase:
     return UploadContractUseCaseImpl(
         unit_of_work, 
         contract_repository,
         profile_repository,
         bank_repository,
-        term_repository,
         pdf_validator_service,
         firebase_storage_service,
-        document_processor_service,
-        term_interpretation_generator_service,
-        consumer_protection_law_matcher_service
+        create_terms_usecase,
     )
 
 def get_update_contract_usecase(
@@ -86,6 +103,17 @@ def get_update_contract_usecase(
     profile_repository: ProfileRepository = Depends(get_profile_repository)
 ) -> UpdateContractUseCase:
     return UpdateContractUseCaseImpl(
+        unit_of_work, 
+        contract_repository,
+        profile_repository
+    )
+
+def get_delete_contract_usecase(
+    unit_of_work: UnitOfWork = Depends(get_unit_of_work),
+    contract_repository: ContractRepository = Depends(get_contract_repository),
+    profile_repository: ProfileRepository = Depends(get_profile_repository)
+) -> DeleteContractUseCase:
+    return DeleteContractUseCaseImpl(
         unit_of_work, 
         contract_repository,
         profile_repository

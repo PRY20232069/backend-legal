@@ -9,6 +9,8 @@ class ContractResource(BaseModel):
     favorite: bool = Field(example=False)
     file_url: str | None = Field(example='https://google.com')
     uploaded_date: datetime = Field(example=datetime.now())
+    terms_count: int = Field(example=0)
+    abusive_terms_count: int = Field(example=0)
     profile_id: int = Field(example=1)
     bank_id: int = Field(example=1)
 
@@ -20,6 +22,8 @@ class ContractResource(BaseModel):
             favorite=entity.favorite,
             file_url=entity.file_url,
             uploaded_date=entity.uploaded_date,
+            terms_count=0,
+            abusive_terms_count=0,
             profile_id=entity.profile_id,
             bank_id=entity.bank_id,
         )

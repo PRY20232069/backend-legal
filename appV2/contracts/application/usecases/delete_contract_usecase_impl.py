@@ -2,19 +2,18 @@ from typing import Tuple
 from fastapi.security import HTTPAuthorizationCredentials
 
 from appV2._shared.domain.repositories.unit_of_work import UnitOfWork
-from appV2.contracts.interfaces.REST.resources.save_contract_resource import SaveContractResource
 from appV2.contracts.interfaces.REST.resources.contract_resource import ContractResource
 from appV2.contracts.domain.model.entities.contract import Contract
 from appV2.contracts.domain.repositories.contract_repository import ContractRepository
-from appV2.contracts.domain.model.usecases.update_contract_usecase import UpdateContractUseCase
-from appV2.contracts.application.exceptions.contract_exceptions import ContractNotFoundError, UpdateContractError
+from appV2.contracts.domain.model.usecases.delete_contract_usecase import DeleteContractUseCase
+from appV2.contracts.application.exceptions.contract_exceptions import ContractNotFoundError, DeleteContractError
 from appV2.profiles.application.exceptions.profile_exceptions import ProfileNotFoundError
 from appV2.profiles.domain.repositories.profile_repository import ProfileRepository
 from appV2._shared.application.exceptions.app_exceptions import TokenInvalidError
 
 from utils.jwt_utils import JwtUtils
 
-class UpdateContractUseCaseImpl(UpdateContractUseCase):
+class DeleteContractUseCaseImpl(DeleteContractUseCase):
 
     def __init__(
         self, unit_of_work: UnitOfWork, 
@@ -25,9 +24,8 @@ class UpdateContractUseCaseImpl(UpdateContractUseCase):
         self.contract_repository = contract_repository
         self.profile_repository = profile_repository
 
-    def __call__(self, args: Tuple[Tuple[HTTPAuthorizationCredentials, int], SaveContractResource]) -> ContractResource:
-        identifiers, data = args
-        token, contract_id = identifiers
+    def __call__(self, args: Tuple[HTTPAuthorizationCredentials, int]) -> ContractResource:
+        token, contract_id = args
 
         if not JwtUtils.is_valid(token):
             raise TokenInvalidError()
@@ -42,9 +40,7 @@ class UpdateContractUseCaseImpl(UpdateContractUseCase):
         if existing_contract is None:
             raise ContractNotFoundError()
 
-        existing_contract.name = data.name
-        existing_contract.favorite = data.favorite
-        existing_contract.bank_id = data.bank_id
+        existing_contract.deleted = True
 
         try:
             self.contract_repository.update(existing_contract)
@@ -53,10 +49,10 @@ class UpdateContractUseCaseImpl(UpdateContractUseCase):
             self.unit_of_work.rollback()
             raise UpdateContractError()
 
-        updated_contract = self.contract_repository.find_by_name_and_profile_id(existing_contract.name, existing_contract.profile_id)
+        deleted_contract = self.contract_repository.find_by_name_and_profile_id(existing_contract.name, existing_contract.profile_id)
 
-        resource = ContractResource.from_entity(updated_contract)
-        resource.terms_count = self.contract_repository.get_terms_count_by_contract_id(updated_contract.id)
-        resource.abusive_terms_count = self.contract_repository.get_abusive_terms_count_by_contract_id(updated_contract.id)
+        resource = ContractResource.from_entity(deleted_contract)
+        resource.terms_count = self.contract_repository.get_terms_count_by_contract_id(deleted_contract.id)
+        resource.abusive_terms_count = self.contract_repository.get_abusive_terms_count_by_contract_id(deleted_contract.id)
 
         return resource

@@ -11,5 +11,5 @@ class BankRepository(BaseRepository[Bank]):
         raise NotImplementedError()
     
     @abstractmethod
-    def get_contracts_count_by_id(self, id: int) -> int:
+    def get_contracts_count_by_bank_id(self, id: int) -> int:
         raise NotImplementedError()

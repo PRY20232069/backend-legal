@@ -6,10 +6,11 @@ from appV2.users.domain.model.entities.user import User
 from appV2._shared.domain.repositories.unit_of_work import UnitOfWork
 from appV2.users.domain.repositories.user_repository import UserRepository
 from appV2.users.domain.model.usecases.recover_user_usecase import RecoverUserUseCase
-from appV2.users.application.exceptions.user_exceptions import UserNotFoundError, RecoverUserError
+from appV2.users.application.exceptions.user_exceptions import UserNotFoundError, RecoverUserError, EmailError
 from appV2.users.domain.services.password_hasher_service import PasswordHasherService
+from appV2.users.domain.services.email_service import EmailService
 
-from utils.constants import DEFAULT_USER_PASSWORD
+from settings import RECOVERY_EMAIL_SUBJECT, RECOVERY_EMAIL_CONTENT, DEFAULT_USER_PASSWORD
 
 class RecoverUserUseCaseImpl(RecoverUserUseCase):
 
@@ -17,10 +18,12 @@ class RecoverUserUseCaseImpl(RecoverUserUseCase):
         self, unit_of_work: UnitOfWork, 
         user_repository: UserRepository, 
         password_hasher_service: PasswordHasherService,
+        email_service: EmailService,
     ):
         self.unit_of_work = unit_of_work
         self.user_repository = user_repository
         self.password_hasher_service = password_hasher_service
+        self.email_service = email_service
 
     def __call__(self, args: Tuple[RecoverUserResource]) -> UserResource:
         data, = args
@@ -33,7 +36,17 @@ class RecoverUserUseCaseImpl(RecoverUserUseCase):
 
         try:
             self.user_repository.update(existing_user)
+
+            self.email_service.send_email(
+                to=[existing_user.email],
+                subject=RECOVERY_EMAIL_SUBJECT,
+                body=f'{RECOVERY_EMAIL_CONTENT} {DEFAULT_USER_PASSWORD}',
+            )
+
             self.unit_of_work.commit()
+        except EmailError as _e:
+            self.unit_of_work.rollback()
+            raise EmailError()
         except Exception as _e:
             self.unit_of_work.rollback()
             raise RecoverUserError()

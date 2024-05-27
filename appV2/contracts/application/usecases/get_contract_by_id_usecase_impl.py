@@ -1,4 +1,5 @@
 from typing import Tuple
+from fastapi.security import HTTPAuthorizationCredentials
 
 from appV2.contracts.interfaces.REST.resources.contract_resource import ContractResource
 from appV2.contracts.domain.repositories.contract_repository import ContractRepository
@@ -19,7 +20,7 @@ class GetContractByIdUseCaseImpl(GetContractByIdUseCase):
         self.contract_repository = contract_repository
         self.profile_repository = profile_repository
 
-    def __call__(self, args: Tuple[str, int]) -> ContractResource:
+    def __call__(self, args: Tuple[HTTPAuthorizationCredentials, int]) -> ContractResource:
         token, contract_id = args
 
         if not JwtUtils.is_valid(token):
@@ -35,4 +36,8 @@ class GetContractByIdUseCaseImpl(GetContractByIdUseCase):
         if existing_contract is None:
             raise ContractNotFoundError()
 
-        return ContractResource.from_entity(existing_contract)
+        resource = ContractResource.from_entity(existing_contract)
+        resource.terms_count = self.contract_repository.get_terms_count_by_contract_id(existing_contract.id)
+        resource.abusive_terms_count = self.contract_repository.get_abusive_terms_count_by_contract_id(existing_contract.id)
+
+        return resource

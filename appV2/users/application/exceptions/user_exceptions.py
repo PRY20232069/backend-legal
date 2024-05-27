@@ -1,4 +1,4 @@
-from appV2._shared.application.exceptions.base_exceptions import BaseNotFoundError, BaseConflictError, BaseUnauthorizedError, BaseBadRequestError
+from appV2._shared.application.exceptions.base_exceptions import BaseNotFoundError, BaseConflictError, BaseUnauthorizedError, BaseBadRequestError, BaseError
 
 
 class UserNotFoundError(BaseNotFoundError):
@@ -19,3 +19,7 @@ class RegisterUserError(BaseBadRequestError):
     
 class RecoverUserError(BaseBadRequestError):
     message = 'An error occurred while recovering the user.'
+
+    
+class EmailError(BaseError):
+    message = 'An error occurred while sending the email.'

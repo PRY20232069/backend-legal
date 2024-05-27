@@ -22,7 +22,7 @@ class GetAllBanksUseCaseImpl(GetAllBanksUseCase):
 
         for bank in existing_banks:
             bank_resource = BankResource.from_entity(bank)
-            bank_resource.contracts_count = self.bank_repository.get_contracts_count_by_id(bank.id)
+            bank_resource.contracts_count = self.bank_repository.get_contracts_count_by_bank_id(bank.id)
             bank_resources.append(bank_resource)
 
         return bank_resources

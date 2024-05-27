@@ -15,3 +15,7 @@ class UploadContractError(BaseBadRequestError):
     
 class UpdateContractError(BaseBadRequestError):
     message = 'An error occurred while updating the contract'
+
+    
+class DeleteContractError(BaseBadRequestError):
+    message = 'An error occurred while deleting the contract'

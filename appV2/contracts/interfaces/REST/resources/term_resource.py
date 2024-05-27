@@ -7,6 +7,7 @@ class TermResource(BaseModel):
     description: str = Field(example='Term description')
     interpretation: str | None = Field(example='Interpretation')
     consumer_protection_law: str | None = Field(example='Consumer Protection Law')
+    abusive: bool = Field(example=False)
     contract_id: int = Field(example=1)
 
     @staticmethod
@@ -16,5 +17,6 @@ class TermResource(BaseModel):
             description=entity.description,
             interpretation=entity.interpretation,
             consumer_protection_law=entity.consumer_protection_law,
+            abusive=entity.abusive,
             contract_id=entity.contract_id,
         )

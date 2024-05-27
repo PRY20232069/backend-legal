@@ -1,5 +1,4 @@
 from typing import Tuple, List
-
 from fastapi.security import HTTPAuthorizationCredentials
 
 from appV2.contracts.interfaces.REST.resources.contract_resource import ContractResource
@@ -32,6 +31,14 @@ class GetAllContractsUseCaseImpl(GetAllContractsUseCase):
         if existing_profile is None:
             raise ProfileNotFoundError()
 
-        existing_contracts = self.contract_repository.findall_by_profile_id(existing_profile.id)
+        existing_contracts = self.contract_repository.findall_by_profile_id_and_not_deleted(existing_profile.id)
 
-        return [ContractResource.from_entity(contract) for contract in existing_contracts]
+        resources = []
+
+        for existing_contract in existing_contracts:
+            resource = ContractResource.from_entity(existing_contract)
+            resource.terms_count = self.contract_repository.get_terms_count_by_contract_id(existing_contract.id)
+            resource.abusive_terms_count = self.contract_repository.get_abusive_terms_count_by_contract_id(existing_contract.id)
+            resources.append(resource)
+
+        return resources

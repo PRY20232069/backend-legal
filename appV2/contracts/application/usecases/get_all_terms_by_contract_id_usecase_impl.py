@@ -1,4 +1,5 @@
 from typing import Tuple, List
+from fastapi.security import HTTPAuthorizationCredentials
 
 from appV2.contracts.interfaces.REST.resources.term_resource import TermResource
 from appV2.contracts.domain.repositories.term_repository import TermRepository
@@ -22,7 +23,7 @@ class GetAllTermsByContractIdUseCaseImpl(GetAllTermsByContractIdUseCase):
         self.contract_repository = contract_repository
         self.profile_repository = profile_repository
 
-    def __call__(self, args: Tuple[str, int]) -> List[TermResource]:
+    def __call__(self, args: Tuple[HTTPAuthorizationCredentials, int]) -> List[TermResource]:
         token, contract_id = args
 
         if not JwtUtils.is_valid(token):
