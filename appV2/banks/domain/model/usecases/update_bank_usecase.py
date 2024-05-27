@@ -9,11 +9,11 @@ from appV2.banks.interfaces.REST.resources.bank_resource import BankResource
 from appV2.banks.domain.repositories.bank_repository import BankRepository
 
 
-class CreateBankUseCase(BaseUseCase[Tuple[HTTPAuthorizationCredentials, SaveBankResource], BankResource]):
+class UpdateBankUseCase(BaseUseCase[Tuple[Tuple[HTTPAuthorizationCredentials, int], SaveBankResource], BankResource]):
 
     unit_of_work: UnitOfWork
     bank_repository: BankRepository
 
     @abstractmethod
-    def __call__(self, args: Tuple[HTTPAuthorizationCredentials, SaveBankResource]) -> BankResource:
+    def __call__(self, args: Tuple[Tuple[HTTPAuthorizationCredentials, int], SaveBankResource]) -> BankResource:
         raise NotImplementedError()

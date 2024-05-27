@@ -1,4 +1,5 @@
 from typing import Tuple, List
+from fastapi.security import HTTPAuthorizationCredentials
 
 from appV2.banks.interfaces.REST.resources.bank_resource import BankResource
 from appV2.banks.domain.repositories.bank_repository import BankRepository
@@ -13,7 +14,7 @@ class GetAllBanksUseCaseImpl(GetAllBanksUseCase):
     ):
         self.bank_repository = bank_repository
 
-    def __call__(self, args: Tuple[str]) -> List[BankResource]:
+    def __call__(self, args: Tuple[HTTPAuthorizationCredentials]) -> List[BankResource]:
         token, = args
         user_id = JwtUtils.get_user_id(token)
 

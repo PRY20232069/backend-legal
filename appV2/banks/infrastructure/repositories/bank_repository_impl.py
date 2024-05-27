@@ -41,3 +41,23 @@ class BankRepositoryImpl(BankRepository):
             return 0
         else:
             return result
+
+    def update(self, bank: Bank) -> Bank:
+        update_data = bank.to_dict()
+
+        statement = update(
+            Bank
+        ).where(
+            Bank.id == bank.id
+        ).values(
+            update_data
+        )
+
+        self.session.execute(statement)
+        return bank
+            
+
+    def delete_by_id(self, id_: int) -> Bank:
+        statement = delete(Bank).where(Bank.id == id_)
+        self.session.execute(statement)
+        return True
