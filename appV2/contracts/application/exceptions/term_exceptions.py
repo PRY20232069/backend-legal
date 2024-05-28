@@ -1,4 +1,8 @@
-from appV2._shared.application.exceptions.base_exceptions import BaseBadRequestError, BaseError
+from appV2._shared.application.exceptions.base_exceptions import BaseBadRequestError, BaseError, BaseNotFoundError
+
+
+class TermNotFoundError(BaseNotFoundError):
+    message = 'Term does not exist.'
 
 
 class CreateTermError(BaseBadRequestError):

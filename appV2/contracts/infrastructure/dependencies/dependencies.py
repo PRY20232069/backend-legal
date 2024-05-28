@@ -4,6 +4,10 @@ from sqlalchemy.orm import Session
 from appV2._shared.infrastructure.configuration.database import get_session
 from appV2._shared.infrastructure.dependencies.dependencies import get_unit_of_work
 from appV2._shared.domain.repositories.unit_of_work import UnitOfWork
+from appV2.profiles.infrastructure.dependencies.dependencies import get_profile_repository
+from appV2.profiles.domain.repositories.profile_repository import ProfileRepository
+from appV2.banks.domain.repositories.bank_repository import BankRepository
+from appV2.banks.infrastructure.dependencies.dependencies import get_bank_repository
 from appV2.contracts.infrastructure.repositories.contract_repository_impl import ContractRepositoryImpl
 from appV2.contracts.domain.repositories.contract_repository import ContractRepository
 from appV2.contracts.infrastructure.repositories.term_repository_impl import TermRepositoryImpl
@@ -32,10 +36,6 @@ from appV2.contracts.domain.services.term_interpretation_generator_service impor
 from appV2.contracts.infrastructure.services.term_interpretation_generator_service_impl import TermInterpretationGeneratorServiceImpl
 from appV2.contracts.domain.services.consumer_protection_law_matcher_service import ConsumerProtectionLawMatcherService
 from appV2.contracts.infrastructure.services.consumer_protection_law_matcher_service_impl import ConsumerProtectionLawMatcherServiceImpl
-from appV2.profiles.infrastructure.dependencies.dependencies import get_profile_repository
-from appV2.profiles.domain.repositories.profile_repository import ProfileRepository
-from appV2.banks.domain.repositories.bank_repository import BankRepository
-from appV2.banks.infrastructure.dependencies.dependencies import get_bank_repository
 
 
 def get_contract_repository(session: Session = Depends(get_session)) -> ContractRepository:
@@ -145,5 +145,5 @@ def get_get_all_terms_by_contract_id_usecase(
     return GetAllTermsByContractIdUseCaseImpl(
         term_repository,
         contract_repository,
-        profile_repository
+        profile_repository,
     )

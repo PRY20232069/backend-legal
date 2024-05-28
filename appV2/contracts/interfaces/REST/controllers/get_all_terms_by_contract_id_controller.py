@@ -4,7 +4,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from appV2._shared.application.exceptions.app_exceptions import TokenNotFoundError, TokenExpiredError, TokenInvalidError
 from appV2.contracts.application.exceptions.contract_exceptions import ContractNotFoundError
-from appV2.contracts.interfaces.REST.controllers.contracts_controller import router
+from appV2.contracts.interfaces.REST.controllers.terms_controller import router
 from appV2.contracts.interfaces.REST.resources.term_resource import TermResource
 from appV2.contracts.domain.model.usecases.get_all_terms_by_contract_id_usecase import GetAllTermsByContractIdUseCase
 from appV2.contracts.infrastructure.dependencies.dependencies import get_get_all_terms_by_contract_id_usecase
@@ -13,7 +13,6 @@ from appV2.profiles.application.exceptions.profile_exceptions import ProfileNotF
 @router.get(
     '/{contract_id}/terms',
     summary='Get terms by contract id',
-    tags=['Terms'],
     response_model=List[TermResource],
     status_code=status.HTTP_200_OK,
     responses={

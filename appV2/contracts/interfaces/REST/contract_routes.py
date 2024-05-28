@@ -4,6 +4,5 @@ from appV2.contracts.interfaces.REST.controllers.update_contract_controller impo
 from appV2.contracts.interfaces.REST.controllers.delete_contract_controller import delete_contract
 from appV2.contracts.interfaces.REST.controllers.get_all_contracts_controller import get_all_contracts
 from appV2.contracts.interfaces.REST.controllers.get_contract_by_id_controller import get_contract_by_id
-from appV2.contracts.interfaces.REST.controllers.get_all_terms_by_contract_id_controller import get_all_terms_by_contract_id
 
 contract_router = router

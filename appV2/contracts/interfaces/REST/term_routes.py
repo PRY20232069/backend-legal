@@ -1,0 +1,4 @@
+from appV2.contracts.interfaces.REST.controllers.terms_controller import router
+from appV2.contracts.interfaces.REST.controllers.get_all_terms_by_contract_id_controller import get_all_terms_by_contract_id
+
+term_router = router

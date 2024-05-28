@@ -1,8 +1,7 @@
-from sqlalchemy import select, update, delete, func
-from sqlalchemy.exc import NoResultFound
-from sqlalchemy.orm import Session
-
 from typing import Sequence, List
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy import select, update, delete, func
 
 from appV2.contracts.domain.model.entities.contract import Contract
 from appV2.contracts.domain.model.entities.term import Term

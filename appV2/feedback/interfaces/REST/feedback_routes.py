@@ -1,0 +1,7 @@
+from appV2.feedback.interfaces.REST.controllers.feedback_controller import router
+from appV2.feedback.interfaces.REST.controllers.create_term_evaluation_controller import create_term_evaluation
+from appV2.feedback.interfaces.REST.controllers.update_term_evaluation_controller import update_term_evaluation
+from appV2.feedback.interfaces.REST.controllers.delete_term_evaluation_controller import delete_term_evaluation
+from appV2.feedback.interfaces.REST.controllers.get_all_term_evaluations_controller import get_all_term_evaluations
+
+feedback_router = router

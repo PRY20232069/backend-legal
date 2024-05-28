@@ -11,7 +11,6 @@ from appV2.contracts.domain.model.entities.contract import Contract
 from appV2.contracts.domain.repositories.contract_repository import ContractRepository
 from appV2.contracts.domain.model.usecases.upload_contract_usecase import UploadContractUseCase
 from appV2.contracts.application.exceptions.contract_exceptions import ContractAlreadyExistsError, UploadContractError
-from appV2.contracts.application.exceptions.term_exceptions import CreateTermError
 from appV2.contracts.domain.services.pdf_validator_service import PdfValidatorService
 from appV2.contracts.domain.services.firebase_storage_service import FirebaseStorageService
 from appV2.contracts.domain.repositories.term_repository import TermRepository

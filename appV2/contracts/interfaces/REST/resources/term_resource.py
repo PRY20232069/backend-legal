@@ -8,6 +8,8 @@ class TermResource(BaseModel):
     interpretation: str | None = Field(example='Interpretation')
     consumer_protection_law: str | None = Field(example='Consumer Protection Law')
     abusive: bool = Field(example=False)
+    client_likes_term_interpretation: bool | None = Field(example=False)
+    client_likes_consumer_protection_law_matching: bool | None = Field(example=False)
     contract_id: int = Field(example=1)
 
     @staticmethod
@@ -18,5 +20,7 @@ class TermResource(BaseModel):
             interpretation=entity.interpretation,
             consumer_protection_law=entity.consumer_protection_law,
             abusive=entity.abusive,
+            client_likes_term_interpretation=None,
+            client_likes_consumer_protection_law_matching=None,
             contract_id=entity.contract_id,
         )
